@@ -2,6 +2,7 @@
 import sys
 import numpy as np
 sys.path.append("..")
+import mixtureOfBernoulli
 import emMixtureOfBernoulli
 
 
@@ -11,11 +12,9 @@ def test_computeProbXnGivenPk(tol=1e-6):
     # prob = 0.9 * 0.8 * 0.5 * 0.6 * 0.3 = 0.06480000000000001
     logPk = np.log(pk)
 
-    emobLog = emMixtureOfBernoulli.EMmixtureOfBernoulliLogProb(x=None)
-    logPXGivenPk = emobLog._computeLogProbXnGivenPk(xn=xn, logPk=logPk)
-
-    emobNonLog = emMixtureOfBernoulli.EMmixtureOfBernoulliNonLogProb(x=None)
-    pxGivenPk = emobNonLog._computeProbXnGivenPk(xn=xn, pk=pk)
+    mob = mixtureOfBernoulli.MixtureOfBernoulli()
+    logPXGivenPk = mob._computeLogProbXnGivenPk(xn=xn, logPk=logPk)
+    pxGivenPk = mob._computeProbXnGivenPk(xn=xn, pk=pk)
 
     expLogPxGivenPK = np.exp(logPXGivenPk)
     assert np.abs(expLogPxGivenPK-pxGivenPk) < tol
@@ -30,11 +29,9 @@ def test_computeMixtureProbs(tol=1e-6, K=3,
     P = np.random.uniform(low=0.25, high=0.75, size=(K, D))
     logP = np.log(P)
 
-    emobLog = emMixtureOfBernoulli.EMmixtureOfBernoulliLogProb(x=images)
-    logMixtureProbs = emobLog._computeLogMixtureProbs(logP=logP)
-
-    emobNonLog = emMixtureOfBernoulli.EMmixtureOfBernoulliNonLogProb(x=images)
-    mixtureProbs = emobNonLog._computeMixtureProbs(P=P)
+    mob = mixtureOfBernoulli.MixtureOfBernoulli()
+    logMixtureProbs = mob.computeMixtureProbsWithLogProbs(x=images, logP=logP)
+    mixtureProbs = mob.computeMixtureProbsWithNonLogProbs(x=images, P=P)
 
     expLogMixtureProbs = np.exp(logMixtureProbs)
     for n in range(N):
@@ -53,11 +50,9 @@ def test_computeLogLikelihood(tol=1e-6, K=3,
     logP = np.log(P)
     logPi = np.log(Pi)
 
-    emobLog = emMixtureOfBernoulli.EMmixtureOfBernoulliLogProb(x=images)
-    ll_log = emobLog._computeLogLikelihood(Pi=logPi, P=logP)
-
-    emobNonLog = emMixtureOfBernoulli.EMmixtureOfBernoulliNonLogProb(x=images)
-    ll_nonLog = emobNonLog._computeLogLikelihood(Pi=Pi, P=P)
+    mob = mixtureOfBernoulli.MixtureOfBernoulli()
+    ll_log = mob.computeLogLikelihoodWithLogProbs(x=images, logPi=logPi, logP=logP)
+    ll_nonLog = mob.computeLogLikelihoodWithNonLogProbs(x=images, Pi=Pi, P=P)
 
     assert np.abs(ll_log-ll_nonLog) < tol
 
