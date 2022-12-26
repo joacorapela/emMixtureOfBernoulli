@@ -1,0 +1,10 @@
+*~
+*.pyc
+
+notes/*
+figures/*
+!figures/.gitkeep
+results/*
+!results/.gitkeep
+report/*
+code/scripts/doPlotModelSelection.py
