@@ -2,7 +2,7 @@ import sys
 import os
 import abc
 import numpy as np
-from . import mixtureOfBernoulli
+import mixtureOfBernoulli
 
 sys.path.append(os.path.expanduser(
     "~/dev/research/programs/repos/python/joacorapela_common/src/"))
@@ -72,15 +72,15 @@ class EMmixtureOfBernoulliNonLogProb(EMmixtureOfBernoulli):
         return super().optimize(Pi0=Pi0, P0=P0, tol=tol, max_iter=max_iter)
 
     def _computeLogLikelihood(self, Pi, P):
-        mob = mixtureOfBernoulli.MitureOfBernoulli()
+        mob = mixtureOfBernoulli.MixtureOfBernoulli()
         ll = mob.computeLogLikelihoodWithNonLogProbs(x=self.x, Pi=Pi, P=P)
         return ll
 
     def _e_step(self, Pi, P):
         # Pi \in 1 x K
         # P \in K x D
-        mob = mixtureOfBernoulli.MitureOfBernoulli()
-        P_NK = mob.computeMixtureProbsWithNonLogProbs(P=P)
+        mob = mixtureOfBernoulli.MixtureOfBernoulli()
+        P_NK = mob.computeMixtureProbsWithNonLogProbs(x=self.x, P=P)
         num = P_NK * np.expand_dims(Pi, 0)  # brodcasting, num \in N x K
         den = np.sum(num, 1)  # den \in N
         R = num / np.expand_dims(den, 1)  # R \in N x K
@@ -96,7 +96,7 @@ class EMmixtureOfBernoulliLogProb(EMmixtureOfBernoulli):
     def _computeLogLikelihood(self, Pi, P):
         logPi = Pi
         logP = P
-        mob = mixtureOfBernoulli.MitureOfBernoulli()
+        mob = mixtureOfBernoulli.MixtureOfBernoulli()
         ll = mob.computeLogLikelihoodWithLogProbs(x=self.x, logPi=logPi,
                                                   logP=logP)
         return ll
@@ -106,7 +106,7 @@ class EMmixtureOfBernoulliLogProb(EMmixtureOfBernoulli):
         # P \in K x D
         logPi = Pi
         logP = P
-        mob = mixtureOfBernoulli.MitureOfBernoulli()
+        mob = mixtureOfBernoulli.MixtureOfBernoulli()
         logP_NK = mob.computeMixtureProbsWithLogProbs(x=self.x, logP=logP)
         Y = np.expand_dims(logPi, 0) + logP_NK
         R = np.empty(shape=Y.shape)
