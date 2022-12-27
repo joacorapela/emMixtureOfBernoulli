@@ -57,3 +57,17 @@ class MixtureOfBernoulli:
         P_NK = self.computeMixtureProbsWithNonLogProbs(x=x, P=P)
         ll = np.sum(np.log(P_NK @ Pi))
         return ll
+
+    def sample(self, Pi, P, tol=1e-6):
+        # first choose the component to sample
+        cum_Pi = np.cumsum(Pi)
+        assert(np.abs(cum_Pi[-1]-1.0) < tol)
+        a_rand = np.random.random_sample(size=1)
+        diff = cum_Pi - a_rand
+        k = np.nonzero(diff > 0)[0][0]
+
+        # now sample Bernoulli's from the chosen component
+        pk = P[k, :]
+        D = len(pk)
+        sample = np.random.binomial(n=1, p=pk)
+        return sample
