@@ -26,17 +26,16 @@ def main(argv):
         estim_res_config["est_params"]["do_not_use_log_prob"] in \
             ["True", "true"]
 
-    with open(estim_res_metadata_filename, "w") as f:
-        estim_res_config.write(f)
-
     model_save_filename = results_filename_pattern.format(est_res_number,
                                                           "pickle")
     with open(model_save_filename, "rb") as f:
         model = pickle.load(f)
 
     P = model["P"]
+    Pi = model["Pi"]
     if not do_not_use_log_prob:
         P = np.exp(P)
+        Pi = np.exp(Pi)
     K = P.shape[0]
     D = P.shape[1]
 
@@ -61,9 +60,6 @@ def main(argv):
     fig.write_html(R_image_filename_pattern.format(est_res_number, "html"))
 
     Pi_image_filename_pattern = "../../figures/{:08d}_Pi.{:s}"
-    Pi = model["Pi"]
-    if not do_not_use_log_prob:
-        Pi = np.exp(Pi)
     fig = go.Figure()
     trace = go.Bar(x=np.arange(len(Pi)), y=Pi)
     fig.add_trace(trace)
