@@ -1,0 +1,4 @@
+rsync -ruv figures/* ssh.swc.ucl.ac.uk:gatsby-swc/gatsby/courses/probabilisticAndUnsupervisedLearning/assignments/assignment2/mySolution/figures
+rsync -ruv notes/* ssh.swc.ucl.ac.uk:gatsby-swc/gatsby/courses/probabilisticAndUnsupervisedLearning/assignments/assignment2/mySolution/notes
+rsync -ruv report/* ssh.swc.ucl.ac.uk:gatsby-swc/gatsby/courses/probabilisticAndUnsupervisedLearning/assignments/assignment2/mySolution/report
+rsync -ruv results/* ssh.swc.ucl.ac.uk:gatsby-swc/gatsby/courses/probabilisticAndUnsupervisedLearning/assignments/assignment2/mySolution/results
